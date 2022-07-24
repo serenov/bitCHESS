@@ -1,5 +1,5 @@
 public class Rook {
-    public static int pattern[][] = new int[8][255];
+    public static long pattern[][] = new long[8][255];
     public static long fpattern[][] = new long[8][255];
     public static void INIT(){
         long position = 1L;
@@ -42,6 +42,7 @@ public class Rook {
             position <<= 1;
             positionF <<= 8;
         }
+
         // position = 1L;
         // long positionF = 1L;
         // for(int i = 0; i < 8; i++){
@@ -77,6 +78,11 @@ public class Rook {
         //     position <<= 8;
         
      }
+
+    public static long getMoves(int pos, long hState, int vState){
+        return pattern[pos % 8][(int)(hState & 255) - 1 ] << (8 * (pos / 8)) 
+        | fpattern[pos / 8][vState - 1] << (pos % 8);
+    }
     // static int count = 0;
     // public static void display(long val){
     //     long position;
@@ -104,4 +110,8 @@ public class Rook {
     //             System.out.println("+++++++++++++++++");
     //         }
     // }
+    public static long[][] getPattern(){
+        INIT();
+        return pattern;
+    }
 }

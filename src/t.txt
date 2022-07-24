@@ -1,0 +1,106 @@
+// public class thread extends Thread{
+
+//     static String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+//     static final int limit = 5;
+//     static bitboard b = new bitboard(fen.split(" "));
+
+//     bitboard Tb;
+//     int count;
+//     static int cnt = 0;
+
+//     public thread(int ID, long sel, long des){
+//         if(fen == null){
+//             fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+//         }
+//         Tb = new bitboard(fen.split(" "));
+//         Tb.bitboardsInit();
+//         b.history(ID, sel, des);
+//         Tb.move(ID, sel, des);
+//         Tb.moves++;
+//         this.setName(stringify(bitboard.getIndex(sel), bitboard.getIndex(des)));
+//     }
+
+//     public String stringify(int sel, int des){
+//         char x = (char)('a' + (sel % 8));
+//         char y = (char)('1' + (sel / 8));
+//         char dx = (char)('a' + (des % 8));
+//         char dy = (char)('1' + (des / 8));
+
+//         return new String(new char[]{x, y, dx, dy});
+//     }
+//     public void Traverse(int turn, int depth){
+//         if(depth > thread.limit) return;
+//         if(!Tb.Checkmate()){
+//             long piece;
+//             int pos;
+//             long pmoves;
+//             long selection;
+//             long destination;
+//             int count;
+//             for(int i = 0; i < 6; i++){
+//                 piece = Tb.getp(6 * turn + i);
+//                 for(int j = bitboard.countBits(piece); j > 0; j--){
+//                     pos = bitboard.getIndex(piece);
+//                     selection = 1l << pos;
+//                     pmoves = Tb.getMoves(6 * turn + i, pos % 8, pos / 8);
+//                     count = bitboard.countBits(pmoves);
+//                     if(depth == thread.limit)this.count += count;
+//                     for(int k = 0; k < count; k++){
+//                         destination = 1l << bitboard.getIndex(pmoves);
+//                         Tb.history(6 * turn + i, selection, destination);
+//                         Tb.move(6 * turn + i, selection, destination);
+//                         Tb.moves++;
+//                         Traverse((turn + 1) % 2, depth + 1);
+//                         Tb.undo(--Tb.moves);
+//                         pmoves &= ~destination;
+//                     }
+//                     piece &= ~(1l << pos);
+//                 }
+//             }
+//         }
+//     }
+//     public static int initiate(thread[] t){
+//         b.INIT();
+//         b.bitboardsInit();
+//         int cnt = 0;
+//         if(!b.Checkmate()){
+//             int turn = b.moves;
+//             long piece;
+//             int pos;
+//             long pmoves;
+//             long selection;
+//             long destination;
+//             for(int i = 0; i < 6; i++){
+//                 piece = b.getp(6 * turn + i);
+//                 for(int j = bitboard.countBits(piece); j > 0; j--){
+//                     pos = bitboard.getIndex(piece);
+//                     selection = 1l << pos;
+//                     pmoves = b.getMoves(6 * turn + i, pos % 8, pos / 8);
+//                     for(int k = bitboard.countBits(pmoves); k > 0; k--){
+//                         destination = 1l << bitboard.getIndex(pmoves);
+//                         t[cnt++] = new thread(i * turn + i, selection, destination);
+//                         pmoves &= ~destination;
+//                     }
+//                     piece &= ~(1l << pos);
+//                 }
+//             }
+//         }
+//         return cnt;
+//     }
+
+//     @Override
+//     public void run() {
+//         Traverse(this.Tb.moves, 1);
+//         thread.cnt += this.count;
+//         System.out.println(this.getName() + ": " + this.count);
+//         System.out.println("total count is " + thread.cnt);
+
+//     }
+//     public static void main(String args[]){
+//         thread t[] = new thread[100];
+//         int count = initiate(t);
+//         for(int i = 0; i < count; i++){
+//             t[i].start();
+//         }
+//     }
+// }
